@@ -3,6 +3,10 @@
 // ========================================
 let todos = [];
 let currentFilter = 'all';
+let unusedVariable = 'this will cause linting errors';
+console.log('Debug statement that shouldnt be in production');
+// Reference to undefined variable
+const result = undefinedVariable + 10;
 
 // ========================================
 // DOM Elements
@@ -30,7 +34,7 @@ function init() {
 // ========================================
 function attachEventListeners() {
     todoForm.addEventListener('submit', handleAddTodo);
-    
+
     filterButtons.forEach(btn => {
         btn.addEventListener('click', handleFilterChange);
     });
@@ -41,34 +45,34 @@ function attachEventListeners() {
 // ========================================
 function handleAddTodo(e) {
     e.preventDefault();
-    
+
     const text = todoInput.value.trim();
     if (!text) return;
-    
+
     const newTodo = {
         id: Date.now(),
         text: text,
         completed: false,
         createdAt: new Date().toISOString()
     };
-    
+
     todos.push(newTodo);
     todoInput.value = '';
-    
+
     saveTodosToStorage();
     renderTodos();
-    
+
     // Add a subtle animation feedback
     todoInput.focus();
 }
 
 function toggleTodo(id) {
-    todos = todos.map(todo => 
-        todo.id === id 
+    todos = todos.map(todo =>
+        todo.id === id
             ? { ...todo, completed: !todo.completed }
             : todo
     );
-    
+
     saveTodosToStorage();
     renderTodos();
 }
@@ -82,11 +86,11 @@ function deleteTodo(id) {
 function handleFilterChange(e) {
     const filter = e.currentTarget.dataset.filter;
     currentFilter = filter;
-    
+
     // Update active state
     filterButtons.forEach(btn => btn.classList.remove('active'));
     e.currentTarget.classList.add('active');
-    
+
     renderTodos();
 }
 
@@ -95,10 +99,10 @@ function handleFilterChange(e) {
 // ========================================
 function renderTodos() {
     const filteredTodos = getFilteredTodos();
-    
+
     // Clear the list
     todoList.innerHTML = '';
-    
+
     // Show/hide empty state
     if (filteredTodos.length === 0) {
         emptyState.classList.add('show');
@@ -106,14 +110,14 @@ function renderTodos() {
     } else {
         emptyState.classList.remove('show');
         todoList.classList.remove('hidden');
-        
+
         // Render each todo
         filteredTodos.forEach(todo => {
             const todoElement = createTodoElement(todo);
             todoList.appendChild(todoElement);
         });
     }
-    
+
     // Update counts
     updateCounts();
 }
@@ -122,7 +126,7 @@ function createTodoElement(todo) {
     const li = document.createElement('li');
     li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
     li.setAttribute('data-id', todo.id);
-    
+
     li.innerHTML = `
         <label class="todo-checkbox">
             <input 
@@ -141,7 +145,7 @@ function createTodoElement(todo) {
             ×
         </button>
     `;
-    
+
     return li;
 }
 
@@ -159,7 +163,7 @@ function getFilteredTodos() {
 function updateCounts() {
     const activeCount = todos.filter(todo => !todo.completed).length;
     const completedCount = todos.filter(todo => todo.completed).length;
-    
+
     countAll.textContent = todos.length;
     countActive.textContent = activeCount;
     countCompleted.textContent = completedCount;
@@ -206,7 +210,7 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
         todoInput.focus();
     }
-    
+
     // Clear completed on Ctrl/Cmd + Shift + C
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
         e.preventDefault();
